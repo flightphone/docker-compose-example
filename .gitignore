@@ -1,1 +1,4 @@
 unoform/node_modules/
+gitlab/config/
+gitlab/logs/
+gitlab/data/

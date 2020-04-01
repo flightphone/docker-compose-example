@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+        web:
+          image: gitlab/gitlab-ce:latest
+          hostname: 84.201.148.77
+          container_name: gitlab_con
+          environment:
+                  GITLAB_OMNIBUS_CONFIG: |
+                      external_url 'http://84.201.148.77'     
+                      gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        
+          ports:
+            - "80:80"
+            - "443:443"
+            - "2224:22"
+          volumes:
+            - ./config:/etc/gitlab
+            - ./logs:/var/log/gitlab
+            - ./data:/var/opt/gitlab
