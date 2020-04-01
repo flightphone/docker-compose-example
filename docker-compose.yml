@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  db:
+    container_name: pgpo_con
+    build:
+        context: ./pgpo
+    environment:        
+        POSTGRES_PASSWORD: aA12345678  
+  webapp:
+    container_name: pomanager_con
+    depends_on:
+      - db
+    build:
+      context: ./pomanag
+    environment:
+       PGHOST: db
+    ports:
+      - "2000:2000"
+  pgadmin4:    
+    image: dpage/pgadmin4
+    container_name: pgadmin4_con
+    depends_on:
+      - db
+    environment:
+        PGADMIN_DEFAULT_EMAIL: efimmanevich@gmail.com
+        PGADMIN_DEFAULT_PASSWORD: aA12345678
+    ports:
+        - "7000:80"
