@@ -1,4 +1,5 @@
 # docker-compose-example
+<pre>
 Примеры файлов yml для развертывания приложений в контейнерах.
 
 Файл ./docker-compose.yml  устанавливает приложение "Закупка велосипедов" на порт 2000. Так же устанавливается Postgresql (изолированно) 
@@ -23,3 +24,4 @@ database: pomanager
 http://hostname:4000/unoconv.html
 
 Файл ./gitlab/docker-compose.yml устанавливает gitlab 
+</pre>
