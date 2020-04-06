@@ -5,7 +5,7 @@ var upload = multer();
 const fetch = require('node-fetch');
 var fs = require('fs');
 var FormData = require('form-data');
-const Readable = require('stream').Readable ;
+var Duplex = require('stream').Duplex; 
 
 var app = express();
 
@@ -14,10 +14,12 @@ var uploadfile = function (req, res)
   var filename = req.file.originalname.split(".")[0] + ".pdf";
   var url = 'http://84.201.148.77:3000/unoconv/pdf';
   var form = new FormData();
-  stream = new Readable ();
+  var stream = new Duplex();
   stream.push(req.file.buffer);
   stream.push(null);
-  form.append('file', stream);
+  //var readStream = new stream.PassThrough();
+  //readStream.end(req.file.buffer);
+  form.append('file', fs.createReadStream("aaa.docx"));
   fetch(url, { 
     method: 'POST', 
     body: form
