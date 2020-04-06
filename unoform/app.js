@@ -8,10 +8,11 @@ var FormData = require('form-data');
 var Duplex = require('stream').Duplex;
 
 var app = express();
-
+var convhost = process.env.CONV_HOST || '84.201.148.77'
+var convport = process.env.CONV_PORT || '3000'
 var uploadfile = function (req, res) {
   var filename = req.file.originalname.split(".")[0] + ".pdf";
-  var url = 'http://84.201.148.77:3000/unoconv/pdf';
+  var url = 'http://'+ convhost + ':' + convport +'/unoconv/pdf';
   var tmpfile = './web/f' + Math.random().toString();
   var tmpfilepdf = tmpfile + '.pdf';
   fs.writeFile(tmpfile, req.file.buffer, function (err) {

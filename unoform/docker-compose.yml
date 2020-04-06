@@ -1,18 +1,23 @@
 version: "3.7"
 services:
-  unoform:
-     container_name: unofom_con    
-     build:
-        context: .
-     ports:   
-     - "4000:4000"   
-     volumes:
-       - ./web:/usr/src/app/web
-  
   unoconv:
     image: zrrrzzt/docker-unoconv-webservice
     container_name: unoconv_con
     environment:
         PAYLOAD_MAX_SIZE: 10485760
-    ports:
-        - "3000:3000"         
+        
+        
+  unoform:
+     container_name: unofom_con
+     depends_on:
+      - unoconv     
+     build:
+        context: .
+     environment:
+       CONV_HOST: unoconv
+     ports:   
+     - "4000:4000"   
+     volumes:
+       - ./web:/usr/src/app/web
+  
+  
