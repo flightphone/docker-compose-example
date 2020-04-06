@@ -3,7 +3,9 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
 const fetch = require('node-fetch');
-var stream = require('stream');
+var fs = require('fs');
+var FormData = require('form-data');
+const Readable = require('stream').Readable ;
 
 var app = express();
 
@@ -11,15 +13,21 @@ var uploadfile = function (req, res)
 {
   var filename = req.file.originalname.split(".")[0] + ".pdf";
   var url = 'http://84.201.148.77:3000/unoconv/pdf';
-  fetch(url, { method: 'POST', body: req.file.buffer})
+  var form = new FormData();
+  stream = new Readable ();
+  stream.push(req.file.buffer);
+  stream.push(null);
+  form.append('file', stream);
+  fetch(url, { 
+    method: 'POST', 
+    body: form
+    })
     .then(r => r.buffer())
     .then(buf => {
-      res.set('Content-disposition', 'attachment; filename=' + filename);
-      res.set('Content-Type', 'application/pdf');
-      var readStream = new stream.PassThrough();
-      readStream.end(buf);
-      readStream.pipe(res);
-
+      fs.writeFile("aaa.pdf", buf, function (err) {
+        return;
+    });
+    res.send("ok");
     });
 }
 
