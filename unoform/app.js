@@ -1,13 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var multer = require('multer');
-var upload = multer();
-const fetch = require('node-fetch');
+var fetch = require('node-fetch');
 var fs = require('fs');
-var FormData = require('form-data');
-//var streamifier = require('streamifier');
+var formdata = require('form-data');
 
 
+var upload = multer();
 var app = express();
 var convhost = process.env.CONV_HOST || '84.201.148.77'
 var convport = process.env.CONV_PORT || '3000'
@@ -15,11 +14,9 @@ var uploadfile = function (req, res) {
   var filename = req.file.originalname.split(".")[0] + ".pdf";
   var url = 'http://' + convhost + ':' + convport + '/unoconv/pdf';
   var tmpfile = './web/f' + Math.random().toString();
-  fs.writeFile(tmpfile, req.file.buffer, function (err) 
-  {
-    var form = new FormData();
+  fs.writeFile(tmpfile, req.file.buffer, function (err) {
+    var form = new formdata();
     form.append('file', fs.createReadStream(tmpfile));
-    //form.append('file', streamifier.createReadStream(req.file.buffer));
 
     fetch(url, {
       method: 'POST',
@@ -33,7 +30,7 @@ var uploadfile = function (req, res) {
           'Content-Length': buf.length
         });
         res.end(buf);
-        fs.unlink(tmpfile, function (err){});
+        fs.unlink(tmpfile, function (err) { });
       });
 
   });
@@ -48,37 +45,3 @@ app.listen(4000, function () {
   console.log('Example app listening on port 4000!');
 });
 
-
-function convert(buf, chunkSize) {
-  if (typeof buf === 'string') {
-    buf = Buffer.from(buf, 'utf8')
-  }
-  if (!Buffer.isBuffer(buf)) {
-    throw new TypeError(`"buf" argument must be a string or an instance of Buffer`)
-  }
-
-  const reader = new Readable()
-  const hwm = reader._readableState.highWaterMark
-
-  // If chunkSize is invalid, set to highWaterMark.
-  if (!chunkSize || typeof chunkSize !== 'number' || chunkSize < 1 || chunkSize > hwm) {
-    chunkSize = hwm
-  }
-
-  const len = buf.length
-  let start = 0
-
-  // Overwrite _read method to push data from buffer.
-  reader._read = function () {
-    while (reader.push(
-      buf.slice(start, (start += chunkSize))
-    )) {
-      // If all data pushed, just break the loop.
-      if (start >= len) {
-        reader.push(null)
-        break
-      }
-    }
-  }
-  return reader
-}
