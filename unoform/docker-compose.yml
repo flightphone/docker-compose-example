@@ -5,6 +5,8 @@ services:
     container_name: unoconv_con
     environment:
         PAYLOAD_MAX_SIZE: 10485760
+    ports:   
+     - "3000:3000"    
         
         
   unoform:
