@@ -12,7 +12,7 @@ var convhost = process.env.CONV_HOST || '84.201.148.77'
 var convport = process.env.CONV_PORT || '3000'
 var uploadfile = function (req, res) {
   var filename = req.file.originalname.split(".")[0] + ".pdf";
-  var url = 'http://'+ convhost + ':' + convport +'/unoconv/pdf';
+  var url = 'http://' + convhost + ':' + convport + '/unoconv/pdf';
   var tmpfile = './web/f' + Math.random().toString();
   var tmpfilepdf = tmpfile + '.pdf';
   fs.writeFile(tmpfile, req.file.buffer, function (err) {
@@ -24,18 +24,23 @@ var uploadfile = function (req, res) {
     })
       .then(r => r.buffer())
       .then(buf => {
+        /*
         fs.writeFile(tmpfilepdf, buf, function (err) {
           res.download(tmpfilepdf, filename, function (err) {
             fs.unlink(tmpfilepdf, function(err){});
             fs.unlink(tmpfile, function(err){});
           });
-        });
+        */
 
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'attachment; filename=' + filename,
+          'Content-Length': buf.length
+        });
+        res.end(buf);
       });
 
-
   });
-
 
 }
 
