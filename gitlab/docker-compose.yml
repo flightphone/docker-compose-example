@@ -2,6 +2,7 @@ version: "3.7"
 services:
         web:
           image: gitlab/gitlab-ce:latest
+          restart: always
           hostname: 84.201.148.77
           container_name: gitlab_con
           environment:
